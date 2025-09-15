@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Canteen - Staff Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- CSS Reset and Basic Styles --- */
+      :root {
+        --bg-color: #ecefca; /* Updated */
+        --header-bg: #94b4c1; /* Updated */
+        --primary-accent: #547792; /* Updated */
+        --primary-accent-dark: #213448; /* Updated */
+        --text-dark: #213448; /* Updated */
+        --text-light: #213448; /* Updated */
+        --border-color: #d1d5db;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-dark);
+      }
+
+      .font-serif-display {
+        font-family: "Playfair Display", serif;
+      }
+
+      .page-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* --- Header and Navigation --- */
+      .header {
+        background-color: var(--header-bg);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .navbar-title {
+        font-size: 1.875rem;
+        color: var(--text-dark);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+      }
+
+      .nav-link {
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: var(--primary-accent);
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .nav-link:hover {
+        background-color: var(--primary-accent-dark);
+      }
+      .nav-link-dashboard {
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: var(--primary-accent);
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+      .nav-link-confirm {
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: var(--primary-accent);
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+      .nav-link-logout {
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: var(--primary-accent);
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+      }
+      /* --- Main Content --- */
+      .main-content {
+        flex-grow: 1;
+        padding: 2rem 1.5rem;
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .dashboard-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+      }
+
+      /* --- Tab Navigation --- */
+      .tabs {
+        display: flex;
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 2rem;
+      }
+
+      .tab-button {
+        padding: 1rem 2rem;
+        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        font-size: 1.125rem;
+        color: var(--text-light);
+        position: relative;
+        bottom: -2px;
+        border-bottom: 2px solid transparent;
+      }
+
+      .tab-button.active {
+        color: var(--primary-accent);
+        border-bottom-color: var(--primary-accent);
+      }
+
+      /* --- Tab Content --- */
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      /* --- Add Item Form --- */
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 1rem;
+        border: 1px solid var(--border-color);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-light);
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .submit-button {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 1.125rem;
+        font-weight: bold;
+        color: white;
+        background-color: var(--primary-accent);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .submit-button:hover {
+        background-color: var(--primary-accent-dark);
+      }
+
+      /* --- View Items Section --- */
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .item-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+        transition: opacity 0.3s;
+      }
+
+      .item-card.out-of-stock {
+        opacity: 0.5;
+      }
+
+      .item-card .out-of-stock-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .item-card.out-of-stock .out-of-stock-overlay {
+        display: flex;
+      }
+
+      .item-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .item-details {
+        padding: 1rem;
+      }
+
+      .item-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .item-info {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+
+      .item-info span {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      .item-actions {
+        padding: 0 1rem 1rem;
+      }
+
+      .stock-button {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--primary-accent);
+        background-color: transparent;
+        color: var(--primary-accent);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .stock-button:hover {
+        background-color: var(--primary-accent);
+        color: white;
+      }
+
+      .item-card.out-of-stock .stock-button {
+        background-color: #6b7280;
+        border-color: #6b7280;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <header class="header">
+        <nav class="navbar">
+          <h1 class="navbar-title font-serif-display">Student Canteen</h1>
+          <div class="nav-links">
+            <button class="nav-link-dashboard" style="border: none;">Dashboard</button>
+            <button class="nav-link-logout" style="border: none;">Logout</button>
+            <button class="nav-link-confirm" style="border: none;">Confirm Order</button>
+          </div>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <h2 class="dashboard-header font-serif-display">Staff Dashboard</h2>
+
+        <div class="tabs">
+          <button class="tab-button active" data-tab="add-item">
+            Add Item
+          </button>
+          <button class="tab-button" data-tab="view-items">View Items</button>
+        </div>
+
+        <div id="add-item" class="tab-content active">
+          <div class="form-container">
+            <form id="add-item-form">
+              <div class="form-group">
+                <label for="item-name" class="form-label">Item Name:</label>
+                <input
+                  type="text"
+                  id="item-name"
+                  name="item-name"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="item-price" class="form-label">Price (₹):</label>
+                <input
+                  type="number"
+                  id="item-price"
+                  name="item-price"
+                  class="form-input"
+                  step="0.01"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="item-image" class="form-label">Image URL:</label>
+                <input
+                  type="text"
+                  id="item-image"
+                  name="item-image"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="item-time" class="form-label"
+                  >Prep Time (mins):</label
+                >
+                <input
+                  type="number"
+                  id="item-time"
+                  name="item-time"
+                  class="form-input"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="item-rating" class="form-label"
+                  >Rating (1-5):</label
+                >
+                <input
+                  type="number"
+                  id="item-rating"
+                  name="item-rating"
+                  class="form-input"
+                  min="1"
+                  max="5"
+                  step="0.1"
+                  required
+                />
+              </div>
+              <button type="submit" class="submit-button">Add Item</button>
+            </form>
+          </div>
+        </div>
+
+        <div id="view-items" class="tab-content">
+          <div class="items-grid">
+            <div class="item-card">
+              <div class="out-of-stock-overlay">Out of Stock</div>
+              <img
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=2881&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Pizza"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Margherita Pizza</h3>
+                <div class="item-info">
+                  <span>Price: ₹12.50</span>
+                  <span>Time: 20min</span>
+                  <span>Rating: 4.5</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="stock-button">Mark as Out of Stock</button>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="out-of-stock-overlay">Out of Stock</div>
+              <img
+                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=2960&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Salad"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Fresh Garden Salad</h3>
+                <div class="item-info">
+                  <span>Price: ₹8.00</span>
+                  <span>Time: 10min</span>
+                  <span>Rating: 4.8</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="stock-button">Mark as Out of Stock</button>
+              </div>
+            </div>
+            <div class="item-card out-of-stock">
+              <div class="out-of-stock-overlay">Out of Stock</div>
+              <img
+                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2799&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Burger"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Classic Burger</h3>
+                <div class="item-info">
+                  <span>Price: ₹10.00</span>
+                  <span>Time: 15min</span>
+                  <span>Rating: 4.6</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="stock-button">Mark as In Stock</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const addItemForm = document.getElementById("add-item-form");
+        const itemsGrid = document.querySelector(".items-grid");
+        let confirmButton = document.querySelector(".nav-link-confirm");
+        // --- Tab switching logic ---
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const targetTab = button.dataset.tab;
+
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            tabContents.forEach((content) => {
+              content.style.display =
+                content.id === targetTab ? "block" : "none";
+            });
+          });
+        });
+
+        // Make sure the initial active tab is displayed correctly
+        document.querySelector(".tab-content.active").style.display = "block";
+
+        /**
+         * Creates an HTML element for a new food item card.
+         * @param {object} itemData - The data for the item from the form.
+         * @returns {HTMLElement} The new item card element.
+         */
+        function createItemCard(itemData) {
+          const card = document.createElement("div");
+          card.classList.add("item-card");
+
+          // Sanitize input to prevent XSS, though browser handles most of it here.
+          const itemName = itemData["item-name"] || "Unnamed Item";
+          const itemImage = itemData["item-image"] || "";
+          const itemPrice = parseFloat(itemData["item-price"] || 0).toFixed(2);
+          const itemTime = parseInt(itemData["item-time"] || 0);
+          const itemRating = parseFloat(itemData["item-rating"] || 0).toFixed(
+            1
+          );
+
+          card.innerHTML = `
+                <div class="out-of-stock-overlay">Out of Stock</div>
+                <img src="${itemImage}" alt="${itemName}" class="item-image" onerror="this.src='https://placehold.co/600x400/FDF5EC/8A7A9A?text=Image+Not+Found'">
+                <div class="item-details">
+                    <h3 class="item-name font-serif-display">${itemName}</h3>
+                    <div class="item-info">
+                        <span>Price: ₹${itemPrice}</span>
+                        <span>Time: ${itemTime}min</span>
+                        <span>Rating: ${itemRating}</span>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="stock-button">Mark as Out of Stock</button>
+                </div>
+            `;
+          return card;
+        }
+
+        // --- Event Delegation for Stock Buttons ---
+        // This single event listener handles clicks for all current and future items.
+        itemsGrid.addEventListener("click", (e) => {
+          if (e.target.classList.contains("stock-button")) {
+            const button = e.target;
+            const card = button.closest(".item-card");
+            card.classList.toggle("out-of-stock");
+
+            // Update button text based on the stock status
+            if (card.classList.contains("out-of-stock")) {
+              button.textContent = "Mark as In Stock";
+            } else {
+              button.textContent = "Mark as Out of Stock";
+            }
+          }
+        });
+
+        // --- Add item form submission logic ---
+        addItemForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const formData = new FormData(addItemForm);
+          const item = Object.fromEntries(formData.entries());
+
+          // Create a new card and add it to the grid
+          const newItemCard = createItemCard(item);
+          itemsGrid.appendChild(newItemCard);
+
+          alert(`Item "${item["item-name"]}" added successfully!`);
+          addItemForm.reset();
+
+          // Automatically switch to the "View Items" tab
+          document.querySelector('.tab-button[data-tab="view-items"]').click();
+        });
+      });
+      let confirmButton = document.querySelector(".nav-link-confirm");
+      confirmButton.addEventListener("click", () => {
+        console.log("Confirm button clicked");
+        window.location.href = "admin.html";
+      });
+    </script>
+  </body>
+</html>

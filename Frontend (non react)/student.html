@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Canteen - Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- CSS Reset and Basic Styles --- */
+      :root {
+        --bg-color: #ecefca; /* Updated */
+        --header-bg: #94b4c1; /* Updated */
+        --primary-accent: #547792; /* Updated */
+        --primary-accent-dark: #213448; /* Updated */
+        --text-dark: #213448; /* Updated */
+        --text-light: #213448; /* Updated */
+        --border-color: #d1d5db;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-dark);
+      }
+
+      .font-serif-display {
+        font-family: "Playfair Display", serif;
+      }
+
+      .page-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* --- Header and Navigation --- */
+      .header {
+        background-color: var(--header-bg);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .navbar {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .navbar-title {
+        font-size: 1.875rem;
+        color: var(--text-dark);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-link {
+        padding: 0.5rem 1rem;
+        color: white;
+        background-color: var(--primary-accent);
+        border-radius: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+        transition: background-color 0.2s ease-in-out;
+      }
+
+      .nav-link:hover {
+        background-color: var(--primary-accent-dark);
+      }
+
+      /* --- Main Content --- */
+      .main-content {
+        flex-grow: 1;
+        padding: 2rem 1.5rem;
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .menu-header {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+      }
+
+      /* --- Filter Buttons --- */
+      .filter-container {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        padding: 0.5rem 1.25rem;
+        border: 1px solid var(--border-color);
+        background-color: white;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        transition: all 0.2s ease-in-out;
+      }
+
+      .filter-btn:hover {
+        background-color: #f3f4f6;
+        border-color: #9ca3af;
+      }
+
+      .filter-btn.active {
+        background-color: var(--primary-accent);
+        color: white;
+        border-color: var(--primary-accent);
+      }
+
+      /* --- Menu Categories --- */
+      .menu-category {
+        margin-bottom: 3rem;
+      }
+
+      .category-title {
+        font-size: 2rem;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      /* --- Items Grid --- */
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .item-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: opacity 0.3s;
+      }
+
+      .item-card.out-of-stock {
+        opacity: 0.5;
+        pointer-events: none; /* Disable clicks */
+        position: relative;
+      }
+
+      .item-card.out-of-stock::after {
+        content: "Out of Stock";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .item-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .item-details {
+        padding: 1rem;
+        flex-grow: 1;
+      }
+
+      .item-name {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .item-info {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+
+      .item-info span {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      .item-actions {
+        padding: 0 1rem 1rem;
+      }
+
+      .add-to-cart-btn {
+        width: 100%;
+        padding: 0.6rem;
+        border: none;
+        background-color: var(--primary-accent);
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+
+      .add-to-cart-btn:hover {
+        background-color: var(--primary-accent-dark);
+        transform: scale(1.02);
+      }
+
+      /* --- Cart Section --- */
+      #cart-section {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 90%;
+        max-width: 380px;
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        z-index: 20;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        transform: translateY(calc(100% + 1.5rem));
+        opacity: 0;
+      }
+
+      #cart-section.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .cart-header {
+        font-size: 1.75rem;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      #cart-items-container {
+        max-height: 250px;
+        overflow-y: auto;
+        padding: 0.5rem 1.5rem;
+      }
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+      }
+
+      .cart-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        background-color: #f9fafb;
+      }
+
+      .cart-total-line {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      #checkout-btn {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1.125rem;
+        font-weight: bold;
+        color: white;
+        background-color: var(--primary-accent);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+
+      /* --- Custom Notification --- */
+      #notification-container {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        z-index: 1000;
+      }
+      .notification {
+        background-color: var(--text-dark);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateX(calc(100% + 1.5rem));
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+      }
+      .notification.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+      <header class="header">
+        <nav class="navbar">
+          <h1 class="navbar-title font-serif-display">Student Canteen</h1>
+          <div class="nav-links">
+            <button id="view-cart-btn" class="nav-link">View Cart</button>
+            <a href="./index.html" class="nav-link">Logout</a>
+          </div>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <h2 class="menu-header font-serif-display">Today's Menu</h2>
+
+        <div class="filter-container">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="veg">Veg</button>
+          <button class="filter-btn" data-filter="non-veg">Non-Veg</button>
+          <button class="filter-btn" data-filter="jain">Jain</button>
+        </div>
+
+        <section class="menu-category">
+          <h2 class="category-title font-serif-display">Drinks</h2>
+          <div class="items-grid">
+            <div
+              class="item-card"
+              data-name="Tea"
+              data-price="15"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1542867041-364e7c7c5936?auto=format&fit=crop&q=80&w=2835&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Tea"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Tea</h3>
+                <div class="item-info">
+                  <span>Price: ₹15.00</span> <span>Rating: 4.3</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+            <div
+              class="item-card"
+              data-name="Coffee"
+              data-price="30"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1495474472287-ab86afd30973?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Coffee"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Coffee</h3>
+                <div class="item-info">
+                  <span>Price: ₹30.00</span> <span>Rating: 4.4</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="menu-category">
+          <h2 class="category-title font-serif-display">Snacks</h2>
+          <div class="items-grid">
+            <div
+              class="item-card"
+              data-name="Samosa"
+              data-price="20"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1626082928508-333e6c0133c9?auto=format&fit=crop&q=80&w=2835&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Samosa"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Samosa</h3>
+                <div class="item-info">
+                  <span>Price: ₹20.00</span> <span>Rating: 4.5</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+            <div
+              class="item-card"
+              data-name="Jain Vada Pav"
+              data-price="35"
+              data-category="veg jain"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1652433555938-e69d95f87b8f?auto=format&fit=crop&q=80&w=2835&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Jain Vada Pav"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Jain Vada Pav</h3>
+                <div class="item-info">
+                  <span>Price: ₹35.00</span> <span>Rating: 4.6</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+            <div
+              class="item-card"
+              data-name="Dabeli"
+              data-price="25"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1626082928508-333e6c0133c9?auto=format&fit=crop&q=80&w=2835&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Dabeli"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Dabeli</h3>
+                <div class="item-info">
+                  <span>Price: ₹25.00</span> <span>Rating: 4.7</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="menu-category">
+          <h2 class="category-title font-serif-display">Meals</h2>
+          <div class="items-grid">
+            <div
+              class="item-card"
+              data-name="Margherita Pizza"
+              data-price="150"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=2881&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Pizza"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Margherita Pizza</h3>
+                <div class="item-info">
+                  <span>Price: ₹150.00</span> <span>Rating: 4.5</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+            <div
+              class="item-card"
+              data-name="Chicken Burger"
+              data-price="120"
+              data-category="non-veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2799&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Chicken Burger"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Chicken Burger</h3>
+                <div class="item-info">
+                  <span>Price: ₹120.00</span> <span>Rating: 4.8</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+            <div
+              class="item-card out-of-stock"
+              data-name="Classic Burger"
+              data-price="100"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2799&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Burger"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Classic Veg Burger</h3>
+                <div class="item-info">
+                  <span>Price: ₹100.00</span> <span>Rating: 4.6</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="menu-category">
+          <h2 class="category-title font-serif-display">Thalis</h2>
+          <div class="items-grid">
+            <div
+              class="item-card"
+              data-name="Gujarati Thali"
+              data-price="250"
+              data-category="veg"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1628126838384-3c65c690226c?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Gujarati Thali"
+                class="item-image"
+              />
+              <div class="item-details">
+                <h3 class="item-name font-serif-display">Gujarati Thali</h3>
+                <div class="item-info">
+                  <span>Price: ₹250.00</span> <span>Rating: 4.9</span>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <section id="cart-section">
+      <h2 class="cart-header font-serif-display">Your Order</h2>
+      <div id="cart-items-container">
+        <ul id="cart-items"></ul>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total-line">
+          <span>Total:</span>
+          <span id="cart-total">₹0</span>
+        </div>
+        <button id="checkout-btn">Checkout</button>
+      </div>
+    </section>
+
+    <div id="notification-container"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mainContent = document.querySelector(".main-content");
+        const cartSection = document.getElementById("cart-section");
+        const cartItemsList = document.getElementById("cart-items");
+        const cartTotalEl = document.getElementById("cart-total");
+        const viewCartButton = document.getElementById("view-cart-btn");
+        const checkoutBtn = document.getElementById("checkout-btn");
+        const filterContainer = document.querySelector(".filter-container");
+
+        let cart = [];
+
+        // --- Filtering Logic ---
+        filterContainer.addEventListener("click", (e) => {
+          if (e.target.classList.contains("filter-btn")) {
+            filterContainer.querySelector(".active").classList.remove("active");
+            e.target.classList.add("active");
+
+            const filter = e.target.dataset.filter;
+            const itemCards = document.querySelectorAll(".item-card");
+
+            itemCards.forEach((card) => {
+              const categories = card.dataset.category.split(" ");
+              if (filter === "all" || categories.includes(filter)) {
+                card.style.display = "flex";
+              } else {
+                card.style.display = "none";
+              }
+            });
+          }
+        });
+
+        // --- Cart Logic using Event Delegation on main content area ---
+        mainContent.addEventListener("click", (e) => {
+          if (e.target.classList.contains("add-to-cart-btn")) {
+            const itemElement = e.target.closest(".item-card");
+            const itemName = itemElement.dataset.name;
+            const itemPrice = parseInt(itemElement.dataset.price);
+
+            const existingItem = cart.find((item) => item.name === itemName);
+
+            if (existingItem) {
+              existingItem.quantity++;
+            } else {
+              cart.push({ name: itemName, price: itemPrice, quantity: 1 });
+            }
+
+            showNotification(`${itemName} added to cart!`);
+            renderCart();
+          }
+        });
+
+        function renderCart() {
+          cartItemsList.innerHTML = "";
+          let total = 0;
+
+          if (cart.length === 0) {
+            cartItemsList.innerHTML =
+              '<li class="text-gray-500" style="color: var(--text-light); padding: 1rem 0;">Your cart is empty.</li>';
+          } else {
+            cart.forEach((item) => {
+              const li = document.createElement("li");
+              li.className = "cart-item";
+              li.innerHTML = `
+                  <div>
+                      <span style="font-weight: bold;">${item.name}</span>
+                      <span style="color: var(--text-light);"> x ${
+                        item.quantity
+                      }</span>
+                  </div>
+                  <span>₹${item.price * item.quantity}</span>
+              `;
+              cartItemsList.appendChild(li);
+              total += item.price * item.quantity;
+            });
+          }
+
+          cartTotalEl.textContent = `₹${total}`;
+
+          if (cart.length > 0 && !cartSection.classList.contains("show")) {
+            cartSection.classList.add("show");
+          }
+        }
+
+        viewCartButton.addEventListener("click", () => {
+          cartSection.classList.toggle("show");
+        });
+
+        checkoutBtn.addEventListener("click", () => {
+          const totalAmount = cart.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+          if (cart.length > 0) {
+            showNotification(
+              `Thank you for your order! Your total is ₹${totalAmount}.`
+            );
+            cart = [];
+            renderCart();
+            setTimeout(() => cartSection.classList.remove("show"), 500);
+          } else {
+            showNotification("Your cart is empty!");
+          }
+        });
+
+        /**
+         * Shows a custom notification message.
+         * @param {string} message - The message to display.
+         */
+        function showNotification(message) {
+          const container = document.getElementById("notification-container");
+          const notification = document.createElement("div");
+          notification.className = "notification";
+          notification.textContent = message;
+          container.appendChild(notification);
+
+          setTimeout(() => {
+            notification.classList.add("show");
+          }, 10);
+
+          setTimeout(() => {
+            notification.classList.remove("show");
+            notification.addEventListener(
+              "transitionend",
+              () => notification.remove(),
+              { once: true }
+            );
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>
